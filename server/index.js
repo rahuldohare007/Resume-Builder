@@ -14,5 +14,5 @@ dbConnection();
 //route
 app.use("/auth/v1", authRoute);
 app.listen(PORT, () => {
-  console.log(`backend is connected : http://127.0.0.1:${PORT}`);
+  console.log(`Backend is connected : http://127.0.0.1:${PORT}`);
 });

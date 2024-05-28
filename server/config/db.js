@@ -3,7 +3,7 @@ async function dbConnection() {
   try {
     // mongoose connection
     mongoose.connection.on("connected", () => {
-      console.log("Mongoose connected to db");
+      console.log("Mongoose connected to database");
     });
     //mongoose error
     mongoose.connection.on("error", (err) => {
