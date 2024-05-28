@@ -1,12 +1,11 @@
 let dbConnection = require("./config/db");
-let dotenv = require("dotenv");
+require("dotenv").config({});
 let express = require("express");
 const { authRoute } = require("./routes/authRoute");
 let app = express();
 let PORT = process.env.PORT || 8000;
 app.use(express.json());
 //middleware configuration
-dotenv.config({});
 dbConnection();
 
 //for setting form data into req
