@@ -1,6 +1,7 @@
 let mongoose = require("mongoose");
 let bcrypt = require("bcrypt");
 let salt = 10;
+
 let registrationSchema = new mongoose.Schema(
   {
     name: {
@@ -57,23 +58,54 @@ let registrationSchema = new mongoose.Schema(
     slug: {
       type: String,
     },
+    token: {
+      type: Array,
+      require: true,
+    },
+    secret: {
+      type: String,
+      require: true,
+    },
   },
   { timestamps: true }
 );
-//using middleware for salting the password
+
+//Using middleware for salting the password
 registrationSchema.pre("save", async function (next) {
   if (this.password) {
     let hashPassword = await bcrypt.hash(this.password, salt);
     this.password = hashPassword;
     next();
   } else {
-    throw new Error("All Field is required *");
+    throw new Error("all Field is required *");
   }
 });
+
+//This is for the compare password by bcrypt
 registrationSchema.methods.comparePassword = async function (row, hash) {
   let matchPassword = await bcrypt.compare(row, hash);
   return matchPassword;
 };
-//this is for registration model
+
+//This is for the saving refresh token in db
+registrationSchema.methods.addToken = async function (refToken) {
+  if (this.token.length > 3) {
+    throw new Error("Max Limit Cross");
+  } else {
+    await this.updateOne({ $push: { token: refToken } });
+  }
+};
+
+//This is for removing refresh token in db
+registrationSchema.methods.removeToken = async function (reftoken) {
+  await this.updateOne({ $pull: { token: reftoken } });
+};
+
+//This is for removing all refresh token in db
+registrationSchema.methods.removeAllToken = async function () {
+  await this.updateOne({ $set: { token: [] } });
+};
+
+//This is for registration model
 let registration = mongoose.model("regi", registrationSchema);
 module.exports = registration;

@@ -1,15 +1,18 @@
 let mongoose = require("mongoose");
+
 async function dbConnection() {
   try {
-    // mongoose connection
+    //Mongoose connection
     mongoose.connection.on("connected", () => {
       console.log("Mongoose connected to database");
     });
-    //mongoose error
+
+    //Mongoose error
     mongoose.connection.on("error", (err) => {
       console.log(err.message);
     });
-    //mongoose disconnected
+
+    //Mongoose disconnected
     mongoose.connection.on("Disconnected", () => {
       console.log("Mongoose connection is disconnected");
     });
@@ -17,10 +20,10 @@ async function dbConnection() {
     //db creation
     await mongoose.connect(`${process.env.DB_URL}/${process.env.DB_NAME}`);
   } catch (err) {
-    console.log(err);
     return;
   }
 }
+
 //ctr +c
 process.on("SIGINT", async () => {
   await mongoose.connection.close();
